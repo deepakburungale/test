@@ -1,4 +1,4 @@
-package com.daimler.epdm.business.listofvalues.impl;
+package com.ubs.opsit.interviews;
 
 import com.ubs.opsit.interviews.BusinessException;
 
