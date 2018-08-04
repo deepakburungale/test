@@ -61,6 +61,7 @@ public class TimeConverterImpl implements TimeConverter {
 		int topRow = secondsPartOfTime == 0 ? 0 : secondsPartOfTime % 2;
 
 		if (topRow == 0) {
+
 			berlinClockBuilder.append("Y\n");
 		} else {
 			berlinClockBuilder.append("O\n");
