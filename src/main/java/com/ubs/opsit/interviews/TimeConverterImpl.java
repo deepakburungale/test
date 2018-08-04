@@ -1,5 +1,7 @@
 package com.daimler.epdm.business.listofvalues.impl;
 
+import com.ubs.opsit.interviews.BusinessException;
+
 /**
  * Provides operations to convert time into Berlin clock representation.
  *
@@ -19,7 +21,8 @@ public class TimeConverterImpl implements TimeConverter {
 	 * Converts given time into Berlin clock representation.
 	 *
 	 * @param aTime
-	 *            Time in the format hh:mm:ss to be converted into Berlin clock representation.
+	 *            Time in the format hh:mm:ss to be converted into Berlin clock
+	 *            representation.
 	 *
 	 * @return Berlin clock representation of given time. {@inheritDoc}
 	 */
@@ -27,22 +30,40 @@ public class TimeConverterImpl implements TimeConverter {
 	public String convertTime(String aTime) {
 
 		// Split given string of time into hour,minute and second.
-		String[] split = aTime.split(":");
+		String[] timeArray = aTime.split(":");
+
+		validateTime(timeArray);
 
 		StringBuilder berlinClockBuilder = new StringBuilder();
 
-		buildTopRowOfBerlinClock(split[2], berlinClockBuilder);
+		buildTopRowOfBerlinClock(timeArray[2], berlinClockBuilder);
 
-		buildFirstRowOfBerlinClock(split[0], berlinClockBuilder);
+		buildFirstRowOfBerlinClock(timeArray[0], berlinClockBuilder);
 
-		buildSecondRowOfBerlinClock(split[0], berlinClockBuilder);
+		buildSecondRowOfBerlinClock(timeArray[0], berlinClockBuilder);
 
-		buildThirdRowOfBerlinClock(split[1], berlinClockBuilder);
+		buildThirdRowOfBerlinClock(timeArray[1], berlinClockBuilder);
 
-		buildFourthRowOfBerlinClock(split[1], berlinClockBuilder);
+		buildFourthRowOfBerlinClock(timeArray[1], berlinClockBuilder);
 
 		return berlinClockBuilder.toString();
 
+	}
+
+	private void validateTime(String[] timeArray) {
+
+		if (timeArray.length != 3) {
+			throw new BusinessException("Please enter time in format hh:mm:ss");
+		}
+		if (Integer.valueOf(timeArray[0]) > 24 || Integer.valueOf(timeArray[0]) < 0) {
+			throw new BusinessException("Hours entered shoud be within 0 to 24");
+		}
+		if (Integer.valueOf(timeArray[1]) > 60 || Integer.valueOf(timeArray[1]) < 0) {
+			throw new BusinessException("Minutes entered should be within 0 to 60");
+		}
+		if (Integer.valueOf(timeArray[2]) > 60 || Integer.valueOf(timeArray[2]) < 0) {
+			throw new BusinessException("Seconds entered should be within 0 to 60");
+		}
 	}
 
 	/**
@@ -61,7 +82,6 @@ public class TimeConverterImpl implements TimeConverter {
 		int topRow = secondsPartOfTime == 0 ? 0 : secondsPartOfTime % 2;
 
 		if (topRow == 0) {
-
 			berlinClockBuilder.append("Y\n");
 		} else {
 			berlinClockBuilder.append("O\n");
@@ -69,8 +89,9 @@ public class TimeConverterImpl implements TimeConverter {
 	}
 
 	/**
-	 * Builds first row of Berlin clock.It consists of 4 characters with combination of character "R" and "O". Each
-	 * character "R" represents 5 hours.
+	 * Builds first row of Berlin clock.It consists of 4 characters with
+	 * combination of character "R" and "O". Each character "R" represents 5
+	 * hours.
 	 *
 	 * @param hours
 	 *            Hours part of time.
@@ -95,8 +116,9 @@ public class TimeConverterImpl implements TimeConverter {
 	}
 
 	/**
-	 * Builds second row of Berlin clock.It consists of 4 characters with combination of character "R" and "O".
-	 * Each character "R" represents 1 hour.
+	 * Builds second row of Berlin clock.It consists of 4 characters with
+	 * combination of character "R" and "O". Each character "R" represents 1
+	 * hour.
 	 *
 	 * @param hours
 	 *            Hours part of time.
@@ -120,9 +142,10 @@ public class TimeConverterImpl implements TimeConverter {
 	}
 
 	/**
-	 * Builds third row of Berlin clock.It consists of 11 characters with combination of character "R","Y" and "O".
-	 * Each character "R" or "Y" represents 5 minutes and character "R" at position 3,6 and 9 represents first
-	 * quarter, half and last quarter of hour.
+	 * Builds third row of Berlin clock.It consists of 11 characters with
+	 * combination of character "R","Y" and "O". Each character "R" or "Y"
+	 * represents 5 minutes and character "R" at position 3,6 and 9 represents
+	 * first quarter, half and last quarter of hour.
 	 *
 	 * @param minutes
 	 *            Minutes part of time.
@@ -149,8 +172,9 @@ public class TimeConverterImpl implements TimeConverter {
 	}
 
 	/**
-	 * Builds fourth row of Berlin clock.It consists of 4 characters with combination of character "Y" and "O".
-	 * Each character "Y" represents 1 minute.
+	 * Builds fourth row of Berlin clock.It consists of 4 characters with
+	 * combination of character "Y" and "O". Each character "Y" represents 1
+	 * minute.
 	 *
 	 * @param minutes
 	 *            Minutes part of time.
